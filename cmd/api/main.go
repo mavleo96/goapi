@@ -1,3 +1,5 @@
+// Package main provides the entry point for the Go API service.
+// This service offers coin balance checking functionality with authentication.
 package main
 
 import (
@@ -9,10 +11,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// main initializes and starts the HTTP server on localhost:8000.
+// It sets up logging, creates a Chi router, and configures all API routes.
 func main() {
 
 	log.SetReportCaller(true)
 	var r *chi.Mux = chi.NewRouter()
+
 	handlers.Handler(r)
 
 	fmt.Println("Starting GO API service...")
@@ -24,7 +29,9 @@ func main() {
 \____/\____/  /_/  |_/_/   /___/   
                                    
 									`)
-	var err error = http.ListenAndServe("localhost:8000", r)
+
+	// Start the HTTP server on localhost:8000
+	err := http.ListenAndServe("localhost:8000", r)
 	if err != nil {
 		log.Error(err)
 	}

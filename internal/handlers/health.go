@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
-
-	"github.com/mavleo96/goapi/api"
-	log "github.com/sirupsen/logrus"
 )
 
 // HealthResponse represents the health check response
@@ -17,9 +14,17 @@ type HealthResponse struct {
 	Version   string    `json:"version"`
 }
 
-// HealthCheck handles the health check endpoint
+// HealthCheck handles GET requests to the health check endpoint.
+// This endpoint is used by load balancers, monitoring systems, and service
+// discovery mechanisms to verify the service is running properly.
+//
+// No authentication is required for this endpoint.
+//
+// Response:
+//   - 200: JSON with service health information
+//   - Always returns 200 if the service is running
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	var response HealthResponse = HealthResponse{
+	response := HealthResponse{
 		Status:    "healthy",
 		Timestamp: time.Now(),
 		Service:   "goapi",
@@ -28,10 +33,5 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	var err error = json.NewEncoder(w).Encode(response)
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
+	json.NewEncoder(w).Encode(response)
 }
