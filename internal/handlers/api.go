@@ -10,6 +10,9 @@ func Handler(r *chi.Mux) {
 	// Global middleware
 	r.Use(chimiddle.StripSlashes)
 
+	// Health check endpoint (no authentication required)
+	r.Get("/health", HealthCheck)
+
 	r.Route("/account", func(router chi.Router) {
 		// Middleware for /account route
 		router.Use(middleware.Authorization)
