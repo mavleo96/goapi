@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
+
+	"github.com/mavleo96/goapi/api"
+	log "github.com/sirupsen/logrus"
 )
 
 // HealthResponse represents the health check response
@@ -16,7 +19,7 @@ type HealthResponse struct {
 
 // HealthCheck handles the health check endpoint
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	response := HealthResponse{
+	var response HealthResponse = HealthResponse{
 		Status:    "healthy",
 		Timestamp: time.Now(),
 		Service:   "goapi",
@@ -25,5 +28,10 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	var err error = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
+		return
+	}
 }

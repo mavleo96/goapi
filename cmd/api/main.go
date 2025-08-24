@@ -24,7 +24,7 @@ func main() {
 \____/\____/  /_/  |_/_/   /___/   
                                    
 									`)
-	err := http.ListenAndServe("localhost:8000", r)
+	var err error = http.ListenAndServe("localhost:8000", r)
 	if err != nil {
 		log.Error(err)
 	}
